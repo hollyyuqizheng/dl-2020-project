@@ -1,2 +1,3 @@
 data/
 .DS_Store
+scripts/download_nyt_articles.py
