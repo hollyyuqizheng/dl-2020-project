@@ -2,6 +2,7 @@ from datetime import datetime
 from pathlib import Path
 import argparse
 import re
+from preprocess import process_line
 
 def create_files(data_path, nyt_data, force=False):
     with open(nyt_data) as f:
@@ -33,8 +34,22 @@ def create_files(data_path, nyt_data, force=False):
                 f = open(filename, 'w')
                 write_dict[year] = f
 
-            write_dict[year].write(re.sub('[^a-z]+', '', paragraph.lower()))
-            write_dict[year].write('\n')
+            
+            sentences = paragraph.split('.') if '.' in paragraph else [paragraph]
+
+            for sentence in sentences:
+
+                print('before', sentence)
+                processed_sentence = process_line(sentence)
+
+                if not processed_sentence:
+                    continue
+
+                print('after', processed_sentence)
+                input()
+
+                write_dict[year].write(sentence)
+                write_dict[year].write('\n')
 
             
         for year in write_dict:
