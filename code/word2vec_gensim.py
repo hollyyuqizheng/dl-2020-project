@@ -21,11 +21,30 @@ model.train(data, total_examples=model.corpus_count, epochs=EPOCH)
 # Get word embeddings from the trained model
 word_vectors = model.wv
 
+# normalizing vectors
+# TODO: add centering 
 # get_normed_vectors()
 # add_vectors() --- this can update the existing vectors
 
 # Get the embedding for a specific word
-vector = word_vectors['American']
+all_vermin_words = [
+    "vermin", 
+    "rodent", 
+    "rodents", 
+    "rat", 
+    "rats", 
+    "mice", 
+    "cockroaches", 
+    "termite", 
+    "termites", 
+    "bedbug", 
+    "bedbugs", 
+    "fleas"]
+all_target_words = [
+    "gay",
+    (s), lesbian(s), bisexual(s), homosexual(s), transgender(s), transsexual(s), transexual(s), transvestite(s), transgendered, asexual, agender, aromantic, lgb, lgbt, lgbtq, lgbtqia, glbt, lgbtqqia, genderqueer, genderfluid, intersex, pansexual
+]
+vector_American = word_vectors['American']
 
 # Cosine similarity for one vector against a list of other vectors
 # return: cosine distance as numpy arrays
