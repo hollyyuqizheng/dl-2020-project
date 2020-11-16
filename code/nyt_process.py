@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 import argparse
+import re
 
 def create_files(data_path, nyt_data, force=False):
     with open(nyt_data) as f:
