@@ -44,7 +44,7 @@ def create_files(data_path, nyt_data, force=False):
                 if not processed_sentence:
                     continue
 
-                write_dict[year].write(sentence)
+                write_dict[year].write(processed_sentence)
                 write_dict[year].write('\n')
 
             
