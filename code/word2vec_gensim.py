@@ -3,6 +3,7 @@ from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
 from preprocess import get_data
 from pathlib import Path
+from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_singulars, all_target_plurals_dict
 
 # Suggested hyperparameters from the paper
 WINDOW_SIZE = 10
@@ -27,23 +28,6 @@ word_vectors = model.wv
 # add_vectors() --- this can update the existing vectors
 
 # Get the embedding for a specific word
-all_vermin_words = [
-    "vermin", 
-    "rodent", 
-    "rodents", 
-    "rat", 
-    "rats", 
-    "mice", 
-    "cockroaches", 
-    "termite", 
-    "termites", 
-    "bedbug", 
-    "bedbugs", 
-    "fleas"]
-all_target_words = [
-    "gay",
-    (s), lesbian(s), bisexual(s), homosexual(s), transgender(s), transsexual(s), transexual(s), transvestite(s), transgendered, asexual, agender, aromantic, lgb, lgbt, lgbtq, lgbtqia, glbt, lgbtqqia, genderqueer, genderfluid, intersex, pansexual
-]
 vector_American = word_vectors['American']
 
 # Cosine similarity for one vector against a list of other vectors
