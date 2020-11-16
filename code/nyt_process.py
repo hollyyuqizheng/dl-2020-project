@@ -3,6 +3,8 @@ from pathlib import Path
 import argparse
 import re
 from preprocess import process_line
+import nltk
+nltk.download('punkt')
 
 def create_files(data_path, nyt_data, force=False):
     with open(nyt_data) as f:
@@ -34,19 +36,13 @@ def create_files(data_path, nyt_data, force=False):
                 f = open(filename, 'w')
                 write_dict[year] = f
 
-            
-            sentences = paragraph.split('.') if '.' in paragraph else [paragraph]
+            sentences = nltk.tokenize.sent_tokenize(paragraph)
 
             for sentence in sentences:
-
-                print('before', sentence)
                 processed_sentence = process_line(sentence)
 
                 if not processed_sentence:
                     continue
-
-                print('after', processed_sentence)
-                input()
 
                 write_dict[year].write(sentence)
                 write_dict[year].write('\n')
