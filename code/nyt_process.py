@@ -32,7 +32,7 @@ def create_files(data_path, nyt_data, force=False):
                 f = open(filename, 'w')
                 write_dict[year] = f
 
-            write_dict[year].write(paragraph.lower())
+            write_dict[year].write(re.sub('[^a-z]+', '', paragraph.lower()))
             write_dict[year].write('\n')
 
             
