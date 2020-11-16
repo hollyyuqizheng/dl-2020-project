@@ -27,6 +27,13 @@ word_vectors = model.wv
 # get_normed_vectors()
 # add_vectors() --- this can update the existing vectors
 
+# zero-center and normalization
+centered_vecs = np.subtract(word_vectors, np.mean(word_vectors, axis=1))
+normalized_vecs = np.divide(word_vectors, np.sum(centered_vecs, axis=1))
+
+keys = word_vectors.index_to_key
+word_vectors.add_vectors(keys, normalized_vecs, replace=True)
+
 # Get the embedding for a specific word
 vector_American = word_vectors['American']
 
