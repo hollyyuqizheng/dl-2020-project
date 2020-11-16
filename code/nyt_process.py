@@ -1,7 +1,8 @@
 from datetime import datetime
 from pathlib import Path
+import argparse
 
-def create_files(data_path, nyt_data):
+def create_files(data_path, nyt_data, force=False):
     with open(nyt_data) as f:
         write_dict = {}
         for line in f:
@@ -24,11 +25,14 @@ def create_files(data_path, nyt_data):
 
             if year not in write_dict:
                 filename = data_file / 'nyt-data-{}.txt'.format(year)
+                if not force and filename.is_file():
+                    print(filename, 'already exists! exiting...')
+                    exit(0)
                 print('creating:', filename)
                 f = open(filename, 'w')
                 write_dict[year] = f
 
-            write_dict[year].write(paragraph)
+            write_dict[year].write(paragraph.lower())
             write_dict[year].write('\n')
 
             
@@ -36,7 +40,12 @@ def create_files(data_path, nyt_data):
             write_dict[year].close()
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', help='force the model to overwrite files', action='store_true', default=False)
+
+    args = parser.parse_args()
+
     data_file = Path('../data')
     filename = data_file / 'nyt-paras.tsv'
-    create_files(data_file, filename)
+    create_files(data_file, filename, args.f)
 
