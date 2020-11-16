@@ -1,6 +1,8 @@
 import numpy as np
 from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
+from preprocess import get_data
+from pathlib import Path
 
 # Suggested hyperparameters from the paper
 WINDOW_SIZE = 10
@@ -10,7 +12,7 @@ EPOCH = 10
 model = Word2Vec(window=WINDOW_SIZE, sg=1)
 
 #data needs to be a list of lists of words, where each sublist represents words from one sentence
-data = #call preprocess function
+data = list(get_data(Path('../data/nyt-data-test.txt'), preprocessed=True)) # call preprocess function
 model.build_vocab(data)
 
 #model.save("word2vec.model")

@@ -13,8 +13,6 @@ def get_data(filename: str, preprocessed=False):
 def process_line(line: str):
     return re.sub('[^a-z ]', '', line.strip().lower())
 
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('filename', help='file to preprocess')
