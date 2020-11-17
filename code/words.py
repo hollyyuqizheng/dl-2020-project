@@ -25,71 +25,72 @@ all_vermin_plurals_dict = {
     "mouse" : ["mice"]
 }
 
-all_moral_disgust_stem = [
-    "american"
-]
-
-all_moral_disgust_dict = {
-    "american" : ["americans"], 
-    "japanese" : ["japan"]
-}
-
+# lists for debugging
 # all_moral_disgust_stem = [
-#     "disgust",
-#     "disease",
-#     "unclean",
-#     "contagious",
-#     "sin",
-#     "slut",
-#     "whore",
-#     "dirt",
-#     "impiety",
-#     "profane",
-#     "gross",
-#     "repulsive",
-#     "sick",
-#     "promiscuous",
-#     "lewd",
-#     "aduterate",
-#     "tramp",
-#     "prostitute",
-#     "unchaste",
-#     "intemperate",
-#     "wanton",
-#     "profligate",
-#     "filth",
-#     "trash",
-#     "obscene",
-#     "lax",
-#     "taint",
-#     "stain",
-#     "tarnish",
-#     "debase",
-#     "wicked",
-#     "blemish",
-#     "exploit",
-#     "pervert",
-#     "wretched"
+#     "american"
 # ]
 
-# # Each word is mapped to a list of related words
 # all_moral_disgust_dict = {
-#     "disgust" : ["disgusting"],
-#     "contagious" : ["contagion"],
-#     "sin" : ["sinful", "sinner", "sins", "sinned", "sinning"],
-#     "slut" : ["slutty"],
-#     "dirt" : ["dirty"],
-#     "impiety" : ["impious"],
-#     "profane" : ["profanity"],
-#     "sick" : ["sickness"],
-#     "lewd" : ["lewding"],
-#     "tramp" : ["tramps"],
-#     "prostitute" : ["prostitution"],
-#     "filth" : ["filthy"],
-#     "trash" : ["trashy"],
-#     "obscene" : ["obscenity"],
-#     "exploit" : ["exploitative"]
+#     "american" : ["americans"], 
+#     "japanese" : ["japan"]
 # }
+
+all_moral_disgust_stem = [
+    "disgust",
+    "disease",
+    "unclean",
+    "contagious",
+    "sin",
+    "slut",
+    "whore",
+    "dirt",
+    "impiety",
+    "profane",
+    "gross",
+    "repulsive",
+    "sick",
+    "promiscuous",
+    "lewd",
+    "aduterate",
+    "tramp",
+    "prostitute",
+    "unchaste",
+    "intemperate",
+    "wanton",
+    "profligate",
+    "filth",
+    "trash",
+    "obscene",
+    "lax",
+    "taint",
+    "stain",
+    "tarnish",
+    "debase",
+    "wicked",
+    "blemish",
+    "exploit",
+    "pervert",
+    "wretched"
+]
+
+# Each word is mapped to a list of related words
+all_moral_disgust_dict = {
+    "disgust" : ["disgusting"],
+    "contagious" : ["contagion"],
+    "sin" : ["sinful", "sinner", "sins", "sinned", "sinning"],
+    "slut" : ["slutty"],
+    "dirt" : ["dirty"],
+    "impiety" : ["impious"],
+    "profane" : ["profanity"],
+    "sick" : ["sickness"],
+    "lewd" : ["lewding"],
+    "tramp" : ["tramps"],
+    "prostitute" : ["prostitution"],
+    "filth" : ["filthy"],
+    "trash" : ["trashy"],
+    "obscene" : ["obscenity"],
+    "exploit" : ["exploitative"]
+}
 
 all_target_singulars = [
     "gay",

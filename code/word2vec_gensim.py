@@ -50,8 +50,6 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
     Input: a word that we want to find all of its morphological forms 
     Output: a weighted average word vector for all the morphological forms, based on frequency
     """
-    print(word)
-
     count_dict = {}
     vector_dict = {}
     total_count = 0
@@ -77,16 +75,10 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
 
     all_counts = np.asarray(list(count_dict.values()))
     vector_weights = np.divide(all_counts, total_count)
-    print(vector_weights.shape)
 
     all_vectors = np.asarray(list(vector_dict.values()))
-    print(all_vectors.shape)
-    bp()
     weighted_vector = np.average(all_vectors, axis=0, weights=vector_weights)
 
-    print(weighted_vector)
-    print(weighted_vector.shape)
-    bp()
     return weighted_vector
 
 
@@ -131,17 +123,13 @@ def get_cosine_distance(normalized_word_vectors, sentiment_words, sentiment_dict
     sentiment_word_vectors = [] 
     for sentiment_word in sentiment_words:
         weighted_vector = get_weighted_vector(normalized_word_vectors, sentiment_word, sentiment_words, sentiment_dict)
-        #sentiment_word_vectors.append(normalized_word_vectors[sentiment_word])
         sentiment_word_vectors.append(weighted_vector)
-    
-    print(len(sentiment_word_vectors))
-    bp()
 
     # Calculates cosine similarity between target word and all the sentiment words
-    #for word in target_words:
-    for word in ["japanese"]:
-        #weighted_word_vector = get_weighted_vector(normalized_word_vectors, word, target_words, sentiment_dict) 
-        weighted_word_vector = get_weighted_vector(normalized_word_vectors, 'japanese', target_words, sentiment_dict) 
+    for word in target_words:
+    #for word in ["japanese"]:
+        weighted_word_vector = get_weighted_vector(normalized_word_vectors, word, target_words, sentiment_dict) 
+        #weighted_word_vector = get_weighted_vector(normalized_word_vectors, 'japanese', target_words, sentiment_dict) 
 
         distance_list = normalized_word_vectors.cosine_similarities(weighted_word_vector, sentiment_word_vectors)
         all_distances[word] = distance_list
