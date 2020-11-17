@@ -30,7 +30,7 @@ all_moral_disgust_stem = [
 ]
 
 all_moral_disgust_dict = {
-    "american" : ["americans"]
+    "american" : ["americans"], 
     "japanese" : ["japan"]
 }
 
