@@ -71,8 +71,7 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
         vector_dict[morph_form] = word_vectors[morph_form]
     
 
-    #TODO: need to write the weighted sum calculation here
-
+    # weighted sum calculation 
     all_counts = np.asarray(list(count_dict.values()))
     vector_weights = np.divide(all_counts, total_count)
 
