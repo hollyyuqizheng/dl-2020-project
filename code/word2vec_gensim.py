@@ -138,7 +138,8 @@ def get_cosine_distance(normalized_word_vectors, sentiment_words, sentiment_dict
     bp()
 
     # Calculates cosine similarity between target word and all the sentiment words
-    for word in target_words:
+    #for word in target_words:
+    for word in ["japanese"]:
         #weighted_word_vector = get_weighted_vector(normalized_word_vectors, word, target_words, sentiment_dict) 
         weighted_word_vector = get_weighted_vector(normalized_word_vectors, 'japanese', target_words, sentiment_dict) 
 
