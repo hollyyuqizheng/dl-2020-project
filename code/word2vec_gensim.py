@@ -51,11 +51,15 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
     Output: a weighted average word vector for all the morphological forms, based on frequency
     """
     print(word)
-    
+
     count_dict = {}
     vector_dict = {}
     total_count = 0
-    main_count = word_vectors.get_vecattr(word, COUNT_PARAM_NAME)
+    try:
+        main_count = word_vectors.get_vecattr(word, COUNT_PARAM_NAME)
+    except:
+        break 
+    
     count_dict[word] = main_count
     vector_dict[word] = word_vectors[word]
 
