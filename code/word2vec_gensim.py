@@ -58,8 +58,8 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
     try:
         main_count = word_vectors.get_vecattr(word, COUNT_PARAM_NAME)
     except:
-        break 
-    
+        return
+
     count_dict[word] = main_count
     vector_dict[word] = word_vectors[word]
 
