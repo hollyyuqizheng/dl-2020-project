@@ -133,11 +133,14 @@ def get_cosine_distance(normalized_word_vectors, sentiment_words, sentiment_dict
         weighted_vector = get_weighted_vector(normalized_word_vectors, sentiment_word, sentiment_words, sentiment_dict)
         #sentiment_word_vectors.append(normalized_word_vectors[sentiment_word])
         sentiment_word_vectors.append(weighted_vector)
+    
+    print(len(sentiment_word_vectors))
+    bp()
 
     # Calculates cosine similarity between target word and all the sentiment words
     for word in target_words:
-        #word_vector = normalized_word_vectors[word]
-        weighted_word_vector = get_weighted_vector(normalized_word_vectors, word, target_words, sentiment_dict) 
+        #weighted_word_vector = get_weighted_vector(normalized_word_vectors, word, target_words, sentiment_dict) 
+        weighted_word_vector = get_weighted_vector(normalized_word_vectors, 'japanese', target_words, sentiment_dict) 
 
         distance_list = normalized_word_vectors.cosine_similarities(weighted_word_vector, sentiment_word_vectors)
         all_distances[word] = distance_list
