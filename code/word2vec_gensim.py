@@ -7,6 +7,23 @@ from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_sing
 
 from pdb import set_trace as bp
 
+# --------------- Parameters  -----------------
+DATA_PATH = '../data/nyt-data-test.txt'
+COUNT_PARAM_NAME = 'count'
+
+LABEL_PARAM_VERMIN = 'vermin'
+LABEL_PARAM_MORAL_DISGUST = 'moral_disgust'
+# TODO: add a label for the other categories when they are added to words.py
+
+# Change this to get cosine similarities for different groups of dehumanizing words
+# Options: vermin, moral_disgust
+SENTIMENT_LABEL = LABEL_PARAM_MORAL_DISGUST
+
+# Suggested model hyperparameters from the paper
+WINDOW_SIZE = 10
+EPOCH = 10
+# ---------------------------------------------
+
 
 def train(model, data, epoch_num):
     model.build_vocab(data)
@@ -19,49 +36,102 @@ def train(model, data, epoch_num):
 
 
 def normalize(word_vectors):
-    # zero-center and normalization
+    # zero-centering and normalization
     normalized_vecs = word_vectors.get_normed_vectors()
     centered_vecs = np.subtract(normalized_vecs, np.mean(normalized_vecs, axis=1, keepdims=True))
     keys = word_vectors.index_to_key
-    # might also need to check keys 
+    # TODO: might also need to check keys 
     word_vectors.add_vectors(keys, centered_vecs, replace=True)
     return word_vectors
 
 
-def get_cosine_distance(normalized_word_vectors, sentiment_words, target_words):
+def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
     """
-    TODO
-    - use frequency to calculate weighted vector for a target word and its morphological friends
-    - and then use these weighted vectors for cosine similarity
+    Input: a word that we want to find all of its morphological forms 
+    Output: a weighted average word vector for all the morphological forms, based on frequency
     """
+    print(word)
+    
+    count_dict = {}
+    vector_dict = {}
+    total_count = 0
+    main_count = word_vectors.get_vecattr(word, COUNT_PARAM_NAME)
+    count_dict[word] = main_count
+    vector_dict[word] = word_vectors[word]
 
-    # vector_american = word_vectors['american']
-    # vector_japanese = word_vectors['japanese']
-    # vector_plant = word_vectors['plant']
-    #count = word_vectors.get_vecattr('american', 'count')
-    # dist_j = word_vectors.cosine_similarities(vector_american, [vector_japanese])
-    # dist_p = word_vectors.cosine_similarities(vector_american, [vector_plant])
+    for morph_form in morph_forms_dict[word]:
+        count_for_this_form = word_vectors.get_vecattr(morph_form, COUNT_PARAM_NAME)
+        count_dict[morph_form] = count_for_this_form
+        total_count += count_for_this_form
+        vector_dict[morph_form] = word_vectors[morph_form]
+    
+
+    #TODO: need to write the weighted sum calculation here
+
+    all_counts = np.asarray(count_dict.values())
+    vector_weights = np.divide(all_counts, total_count)
+
+    all_vectors = np.asarray(vector_dict.values())
+    print(all_vectors.shape)
+    bp()
+    weighted_vector = np.average(all_vectors, weights=vector_weights)
+    return weighted_vector
+
+
+
+def get_sentiment_list_and_dict():
+    """
+    Returns the list of main sentiment words and its corresponding morphological dictionary
+    based on the label set to SENTIMENT_LABEL (at the top of the file)
+    """
+    sentiment_list_switcher = {
+        LABEL_PARAM_MORAL_DISGUST : all_moral_disgust_stem,
+        LABEL_PARAM_VERMIN : all_vermin_singulars
+    }
+    sentiment_dict_switcher = {
+        LABEL_PARAM_MORAL_DISGUST : all_moral_disgust_dict,
+        LABEL_PARAM_VERMIN : all_vermin_plurals_dict
+    }
+    sentiment_words = sentiment_list_switcher.get(SENTIMENT_LABEL)
+    sentiment_dict = sentiment_dict_switcher.get(SENTIMENT_LABEL)
+
+    return sentiment_words, sentiment_dict
+
+
+def get_cosine_distance(normalized_word_vectors, sentiment_words, sentiment_dict, target_words):
+    """
+    Calculates the cosine distance between all the target words with all the sentiment words.
+    This function uses the get_weighted_vector helper function to compute a weighted average 
+    word vector for each word based on its morphological variations.
+
+    Input:
+    - normalized_word_vectors: all word vectors after normalization
+    - sentiment_words: a list of all the main sentiment words 
+    - sentiment_dict: a dictionary that maps each of the sentiment word to its morphological variations
+    - target_words: a list of all the target words for population we are investigating  
+    """
 
     all_distances = {}
     all_similar_words = {}
 
     # Construct a list of word embeddings for the sentiiment words 
+    # This list of vectors are the results of the weighted average calculation based on morphological form variation
     sentiment_word_vectors = [] 
     for sentiment_word in sentiment_words:
-        sentiment_word_vectors.append(normalized_word_vectors[sentiment_word])
+        weighted_vector = get_weighted_vector(normalized_word_vectors, sentiment_word, sentiment_words, sentiment_dict)
+        #sentiment_word_vectors.append(normalized_word_vectors[sentiment_word])
+        sentiment_word_vectors.append(weighted_vector)
 
     # Calculates cosine similarity between target word and all the sentiment words
     for word in target_words:
-        word_vector = normalized_word_vectors[word]
-        word_count = normalized_word_vectors.get_vecattr(word, 'count')
+        #word_vector = normalized_word_vectors[word]
+        weighted_word_vector = get_weighted_vector(normalized_word_vectors, word, target_words, sentiment_dict) 
 
-        # TODO: weighted vector!
-
-        distance_list = normalized_word_vectors.cosine_similarities(word_vector, sentiment_word_vectors)
+        distance_list = normalized_word_vectors.cosine_similarities(weighted_word_vector, sentiment_word_vectors)
         all_distances[word] = distance_list
     
         # Find top 5 similar words for each target word
-        similar_words = normalized_word_vectors.similar_by_vector(word_vector, topn=5)
+        similar_words = normalized_word_vectors.similar_by_vector(weighted_word_vector, topn=5)
         all_similar_words[word] = similar_words
 
         # There's also a most_similar function with positive and negative words as inputs
@@ -70,23 +140,19 @@ def get_cosine_distance(normalized_word_vectors, sentiment_words, target_words):
 
 
 def main():
-    # Suggested hyperparameters from the paper
-    WINDOW_SIZE = 10
-    EPOCH = 10
-
-    sentiment_words = all_moral_disgust_stem
-    target_words = all_target_singulars
-
     # sg=1 so that it's a skip-gram model
     model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
     
     #data needs to be a list of lists of words, where each sublist represents words from one sentence
-    data = list(get_data(Path('../data/nyt-data-test.txt'), preprocessed=False)) # call preprocess function
+    data = list(get_data(Path(DATA_PATH), preprocessed=False)) # call preprocess function
 
     word_vectors = train(model, data, EPOCH)
     normalized_vectors = normalize(word_vectors)
 
-    all_distances, all_similar_words = get_cosine_distance(normalized_vectors , sentiment_words, target_words)
+    sentiment_words, sentiment_dict = get_sentiment_list_and_dict()
+    target_words = all_target_singulars
+
+    all_distances, all_similar_words = get_cosine_distance(normalized_vectors, sentiment_words, sentiment_dict, target_words)
     print(all_similar_words)
 
 

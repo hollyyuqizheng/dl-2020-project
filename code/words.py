@@ -17,12 +17,12 @@ all_vermin_singulars = [
 ]
 
 all_vermin_plurals_dict = {
-    "rodent" : "rodents",
-    "rat" : "rats",
-    "termite" : "termites",
-    "bedbug" : "bedbugs",
-    "cockroach" : "cockroaches", 
-    "mouse" : "mice"
+    "rodent" : ["rodents"],
+    "rat" : ["rats"],
+    "termite" : ["termites"],
+    "bedbug" : ["bedbugs"],
+    "cockroach" : ["cockroaches"], 
+    "mouse" : ["mice"]
 }
 
 all_moral_disgust_stem = [
@@ -108,12 +108,12 @@ all_target_singulars = [
 ]
 
 all_target_plurals_dict = {
-    "gay" : "gays",
-    "lesbian" : "lesbians", 
-    "bisexual" : "bisexuals",
-    "homosexual" : "homosexuals",
-    "transgender" : "transgenders",
-    "transsexual" : "transsexuals,",
-    "transexual" : "transexuals",
-    "transvestite" : "transvestites"
+    "gay" : ["gays"],
+    "lesbian" : ["lesbians"], 
+    "bisexual" : ["bisexuals"],
+    "homosexual" : ["homosexuals"],
+    "transgender" : ["transgenders"],
+    "transsexual" : ["transsexuals"],
+    "transexual" : ["transexuals"],
+    "transvestite" : ["transvestites"]
 }
