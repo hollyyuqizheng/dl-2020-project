@@ -12,7 +12,7 @@ WINDOW_SIZE = 10
 EPOCH = 10
 
 # sg=1 so that it's a skip-gram model
-model = Word2Vec(window=WINDOW_SIZE, sg=1)
+model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
 
 #data needs to be a list of lists of words, where each sublist represents words from one sentence
 data = list(get_data(Path('../data/nyt-data-test.txt'), preprocessed=False)) # call preprocess function
