@@ -3,57 +3,93 @@ from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
 from preprocess import get_data
 from pathlib import Path
-from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_singulars, all_target_plurals_dict
+from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_singulars, all_target_plurals_dict, all_moral_disgust_stem, all_moral_disgust_dict 
 
 from pdb import set_trace as bp
 
-# Suggested hyperparameters from the paper
-WINDOW_SIZE = 10
-EPOCH = 10
 
-# sg=1 so that it's a skip-gram model
-model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
+def train(model, data, epoch_num):
+    model.build_vocab(data)
+    model.train(data, total_examples=model.corpus_count, epochs=epoch_num)
+    #model.save("word2vec.model")
 
-#data needs to be a list of lists of words, where each sublist represents words from one sentence
-data = list(get_data(Path('../data/nyt-data-test.txt'), preprocessed=False)) # call preprocess function
-model.build_vocab(data)
+    # Get word embeddings from the trained model
+    word_vectors = model.wv
+    return word_vectors
 
-#model.save("word2vec.model")
-model.train(data, total_examples=model.corpus_count, epochs=EPOCH)
 
-# Get word embeddings from the trained model
-word_vectors = model.wv
+def normalize(word_vectors):
+    # zero-center and normalization
+    normalized_vecs = word_vectors.get_normed_vectors()
+    centered_vecs = np.subtract(normalized_vecs, np.mean(normalized_vecs, axis=1, keepdims=True))
+    keys = word_vectors.index_to_key
+    # might also need to check keys 
+    word_vectors.add_vectors(keys, centered_vecs, replace=True)
+    return word_vectors
 
-# zero-center and normalization
-normalized_vecs = word_vectors.get_normed_vectors()
-centered_vecs = np.subtract(normalized_vecs, np.mean(normalized_vecs, axis=1, keepdims=True))
-# normalized_vecs = np.divide(word_vectors, np.sum(centered_vecs, axis=1))
 
-keys = word_vectors.index_to_key
-# might need to check if the entire matrix is added,
-# or we need a for loop to add each one...
-# might also need to check keys 
-word_vectors.add_vectors(keys, centered_vecs, replace=True)
+def get_cosine_distance(normalized_word_vectors, sentiment_words, target_words):
+    """
+    TODO
+    - use frequency to calculate weighted vector for a target word and its morphological friends
+    - and then use these weighted vectors for cosine similarity
+    """
 
-# Get the embedding for a specific word
-vector_american = word_vectors['american']
-vector_japanese = word_vectors['japanese']
-vector_plant = word_vectors['plant']
+    # vector_american = word_vectors['american']
+    # vector_japanese = word_vectors['japanese']
+    # vector_plant = word_vectors['plant']
+    #count = word_vectors.get_vecattr('american', 'count')
+    # dist_j = word_vectors.cosine_similarities(vector_american, [vector_japanese])
+    # dist_p = word_vectors.cosine_similarities(vector_american, [vector_plant])
 
-# Cosine similarity for one vector against a list of other vectors
-# return: cosine distance as numpy arrays
-dist_j = word_vectors.cosine_similarities(vector_american, [vector_japanese])
-dist_p = word_vectors.cosine_similarities(vector_american, [vector_plant])
-print(dist_j)
-print(dist_p)
-print("------")
+    all_distances = {}
+    all_similar_words = {}
 
-similar_words = word_vectors.similar_by_vector(vector_american, topn=10)
-print(similar_words)
-print("-------")
+    # Construct a list of word embeddings for the sentiiment words 
+    sentiment_word_vectors = [] 
+    for sentiment_word in sentiment_words:
+        sentiment_word_vectors.append(normalized_word_vectors[sentiment_word])
 
-# There's also a most_similar function with positive and negative words as inputs
+    # Calculates cosine similarity between target word and all the sentiment words
+    for word in target_words:
+        word_vector = normalized_word_vectors[word]
+        word_count = normalized_word_vectors.get_vecattr(word, 'count')
 
-# This should give us the count of this word
-count = word_vectors.get_vecattr('american', 'count')
-print("count of 'american': " + str(count))
+        # TODO: weighted vector!
+
+        distance_list = normalized_word_vectors.cosine_similarities(word_vector, sentiment_word_vectors)
+        all_distances[word] = distance_list
+    
+        # Find top 5 similar words for each target word
+        similar_words = normalized_word_vectors.similar_by_vector(word_vector, topn=5)
+        all_similar_words[word] = similar_words
+
+        # There's also a most_similar function with positive and negative words as inputs
+    
+    return all_distances, all_similar_words
+
+
+def main():
+    # Suggested hyperparameters from the paper
+    WINDOW_SIZE = 10
+    EPOCH = 10
+
+    sentiment_words = all_moral_disgust_stem
+    target_words = all_target_singulars
+
+    # sg=1 so that it's a skip-gram model
+    model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
+    
+    #data needs to be a list of lists of words, where each sublist represents words from one sentence
+    data = list(get_data(Path('../data/nyt-data-test.txt'), preprocessed=False)) # call preprocess function
+
+    word_vectors = train(model, data, EPOCH)
+    normalized_vectors = normalize(word_vectors)
+
+    all_distances, all_similar_words = get_cosine_distance(normalized_vectors , sentiment_words, target_words)
+    print(all_similar_words)
+
+
+
+if __name__ == '__main__':
+    main()

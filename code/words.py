@@ -1,6 +1,8 @@
 """
 This file contains lists of words whose embeddings we want to look at,
 and dictionaries that map singular nouns to their pural forms. 
+TODO
+- add words for denial of agency
 """
 
 all_vermin_singulars = [
