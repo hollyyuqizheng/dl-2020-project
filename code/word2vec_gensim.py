@@ -64,7 +64,10 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
     vector_dict[word] = word_vectors[word]
 
     for morph_form in morph_forms_dict[word]:
-        count_for_this_form = word_vectors.get_vecattr(morph_form, COUNT_PARAM_NAME)
+        try:
+            count_for_this_form = word_vectors.get_vecattr(morph_form, COUNT_PARAM_NAME)
+        except:
+            continue 
         count_dict[morph_form] = count_for_this_form
         total_count += count_for_this_form
         vector_dict[morph_form] = word_vectors[morph_form]
