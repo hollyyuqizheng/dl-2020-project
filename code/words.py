@@ -29,9 +29,9 @@ all_moral_disgust_stem = [
     "american"
 ]
 
-all_moral_disgust_dict = [
+all_moral_disgust_dict = {
     "american" : ["americans"]
-]
+}
 
 # all_moral_disgust_stem = [
 #     "disgust",
