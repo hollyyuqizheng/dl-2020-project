@@ -1,11 +1,12 @@
 import re
 import argparse
+from pdb import set_trace as bp
 
 def get_data(filename: str, preprocessed=False):
     with open(filename) as f:
         for line in f:
             if not preprocessed:
-                line = process_line(line)
+                line = process_line(line).rstrip()
 
             yield line.split(' ')
 
