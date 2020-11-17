@@ -25,14 +25,15 @@ model.train(data, total_examples=model.corpus_count, epochs=EPOCH)
 word_vectors = model.wv
 
 # zero-center and normalization
-#centered_vecs = np.subtract(word_vectors, np.mean(word_vectors, axis=1))
-#normalized_vecs = np.divide(word_vectors, np.sum(centered_vecs, axis=1))
+normalized_vecs = word_vectors.get_normed_vectors()
+centered_vecs = np.subtract(normalized_vecs, np.mean(normalized_vecs, axis=1))
+# normalized_vecs = np.divide(word_vectors, np.sum(centered_vecs, axis=1))
 
-#keys = word_vectors.index_to_key
+keys = word_vectors.index_to_key
 # might need to check if the entire matrix is added,
 # or we need a for loop to add each one...
 # might also need to check keys 
-#word_vectors.add_vectors(keys, normalized_vecs, replace=True)
+word_vectors.add_vectors(keys, centered_vecs, replace=True)
 
 # Get the embedding for a specific word
 vector_american = word_vectors['american']
