@@ -25,11 +25,11 @@ model.train(data, total_examples=model.corpus_count, epochs=EPOCH)
 word_vectors = model.wv
 
 # zero-center and normalization
-normalized_vecs = model.wv.get_normed_vectors()
+normalized_vecs = word_vectors.wv.get_normed_vectors()
 centered_vecs = np.subtract(normalized_vecs, np.mean(normalized_vecs, axis=1))
 # normalized_vecs = np.divide(word_vectors, np.sum(centered_vecs, axis=1))
 
-keys = model.wv.index_to_key
+keys = word_vectors.wv.index_to_key
 # might need to check if the entire matrix is added,
 # or we need a for loop to add each one...
 # might also need to check keys 
