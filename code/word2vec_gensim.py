@@ -41,8 +41,8 @@ vector_plant = word_vectors['plant']
 
 # Cosine similarity for one vector against a list of other vectors
 # return: cosine distance as numpy arrays
-dist_j = word_vectors.cosine_similarities(vector_american, vector_japanese)
-dist_p = word_vectors.cosine_similarities(vector_american, vector_plant)
+dist_j = word_vectors.cosine_similarities(vector_american, [vector_japanese])
+dist_p = word_vectors.cosine_similarities(vector_american, [vector_plant])
 print(dist_j)
 print(dist_p)
 print("------")
