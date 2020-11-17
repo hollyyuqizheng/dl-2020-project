@@ -5,6 +5,8 @@ from preprocess import get_data
 from pathlib import Path
 from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_singulars, all_target_plurals_dict
 
+from pdb import set_trace as bp
+
 # Suggested hyperparameters from the paper
 WINDOW_SIZE = 10
 EPOCH = 10
@@ -33,16 +35,24 @@ keys = word_vectors.index_to_key
 word_vectors.add_vectors(keys, normalized_vecs, replace=True)
 
 # Get the embedding for a specific word
-vector_American = word_vectors['American']
-vector_
+vector_american = word_vectors['american']
+vector_japanese = word_vectors['japanese']
+vector_plant = word_vectors['plant']
 
 # Cosine similarity for one vector against a list of other vectors
 # return: cosine distance as numpy arrays
-word_vectors.cosine_similarities(vector_American, other_vectors)
+dist_j = word_vectors.cosine_similarities(vector_american, vector_japanese)
+dist_p = word_vectors.cosine_similarities(vector_american, vector_plant)
+print(dist_j)
+print(dist_p)
+print("------")
 
-similar_words = word_vectors.similar_by_vector(vector, topn=10)
+similar_words = word_vectors.similar_by_vector(vector_american, topn=10)
+print(similar_words)
+print("-------")
 
 # There's also a most_similar function with positive and negative words as inputs
 
 # This should give us the count of this word
-word_vectors.vocab['American'].count
+count = word_vectors.vocab['american'].count
+print("count of 'american': " + str(count))
