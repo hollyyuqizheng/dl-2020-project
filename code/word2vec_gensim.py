@@ -82,7 +82,7 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
     all_vectors = np.asarray(list(vector_dict.values()))
     print(all_vectors.shape)
     bp()
-    weighted_vector = np.average(all_vectors, weights=vector_weights)
+    weighted_vector = np.average(all_vectors, axis=0, weights=vector_weights)
 
     print(weighted_vector)
     print(weighted_vector.shape)
