@@ -23,6 +23,8 @@ model.train(data, total_examples=model.corpus_count, epochs=EPOCH)
 
 # Get word embeddings from the trained model
 word_vectors = model.wv
+print(word_vectors)
+print(type(word_vectors))
 
 # zero-center and normalization
 centered_vecs = np.subtract(word_vectors, np.mean(word_vectors, axis=1))
