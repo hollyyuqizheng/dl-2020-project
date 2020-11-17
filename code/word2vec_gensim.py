@@ -26,7 +26,7 @@ word_vectors = model.wv
 
 # zero-center and normalization
 normalized_vecs = word_vectors.get_normed_vectors()
-centered_vecs = np.subtract(normalized_vecs, np.mean(normalized_vecs, axis=1, keep_dims=True))
+centered_vecs = np.subtract(normalized_vecs, np.mean(normalized_vecs, axis=1, keepdims=True))
 # normalized_vecs = np.divide(word_vectors, np.sum(centered_vecs, axis=1))
 
 keys = word_vectors.index_to_key
