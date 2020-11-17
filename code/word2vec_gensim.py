@@ -55,5 +55,5 @@ print("-------")
 # There's also a most_similar function with positive and negative words as inputs
 
 # This should give us the count of this word
-count = word_vectors.vocab['american'].count
+count = word_vectors.get_vecattr('american', 'count')
 print("count of 'american': " + str(count))
