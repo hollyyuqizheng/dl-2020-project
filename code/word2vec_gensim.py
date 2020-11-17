@@ -75,10 +75,11 @@ def get_weighted_vector(word_vectors, word, main_list, morph_forms_dict):
 
     #TODO: need to write the weighted sum calculation here
 
-    all_counts = np.asarray(count_dict.values())
+    all_counts = np.asarray(list(count_dict.values()))
     vector_weights = np.divide(all_counts, total_count)
-
-    all_vectors = np.asarray(vector_dict.values())
+    print(vector_weights.shape)
+    
+    all_vectors = np.asarray(list(vector_dict.values()))
     print(all_vectors.shape)
     bp()
     weighted_vector = np.average(all_vectors, weights=vector_weights)
