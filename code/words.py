@@ -75,21 +75,21 @@ all_moral_disgust_stem = [
 
 # Each word is mapped to a list of related words
 all_moral_disgust_dict = {
-    "disgust" : ["disgusting"],
+    "disgust" : ["disgusting", "disgusted", "disgusts"],
     "contagious" : ["contagion"],
-    "sin" : ["sinful", "sinner", "sins", "sinned", "sinning"],
-    "slut" : ["slutty"],
-    "dirt" : ["dirty"],
+    "sin" : ["sinful", "sinner", "sinners", "sins", "sinned", "sinning"],
+    "slut" : ["slutty", "sluts", "sluttiness"],
+    "dirt" : ["dirty", "dirtiness"],
     "impiety" : ["impious"],
     "profane" : ["profanity"],
-    "sick" : ["sickness"],
+    "sick" : ["sickness", "sickly"],
     "lewd" : ["lewding"],
     "tramp" : ["tramps"],
     "prostitute" : ["prostitution"],
-    "filth" : ["filthy"],
-    "trash" : ["trashy"],
+    "filth" : ["filthy", "filthiness"],
+    "trash" : ["trashy", "trashiness"],
     "obscene" : ["obscenity"],
-    "exploit" : ["exploitative"]
+    "exploit" : ["exploitative", "exploitation", "exploits", "exploited"]
 }
 
 all_target_singulars = [
@@ -125,5 +125,7 @@ all_target_plurals_dict = {
     "transgender" : ["transgenders"],
     "transsexual" : ["transsexuals"],
     "transexual" : ["transexuals"],
-    "transvestite" : ["transvestites"]
+    "transvestite" : ["transvestites"],
+    "asexual": ["asexuals"],
+    "pansexual": ["pansexuals"]
 }
