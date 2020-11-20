@@ -8,7 +8,7 @@ from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_sing
 from pdb import set_trace as bp
 
 # --------------- Parameters  -----------------
-DATA_PATH = '../data/nyt-data-test.txt'
+DATA_PATH = '../data/nyt-paras.tsv'
 COUNT_PARAM_NAME = 'count'
 
 LABEL_PARAM_VERMIN = 'vermin'
@@ -28,7 +28,7 @@ EPOCH = 10
 def train(model, data, epoch_num):
     model.build_vocab(data)
     model.train(data, total_examples=model.corpus_count, epochs=epoch_num)
-    #model.save("word2vec.model")
+    model.save("./nyt_full.model")
 
     # Get word embeddings from the trained model
     word_vectors = model.wv
@@ -148,15 +148,16 @@ def main():
     
     #data needs to be a list of lists of words, where each sublist represents words from one sentence
     data = list(get_data(Path(DATA_PATH), preprocessed=False)) # call preprocess function
+    print("Preprocessing finished, start training!")
 
     word_vectors = train(model, data, EPOCH)
-    normalized_vectors = normalize(word_vectors)
+    # normalized_vectors = normalize(word_vectors)
 
-    sentiment_words, sentiment_dict = get_sentiment_list_and_dict()
-    target_words = all_target_singulars
+    # sentiment_words, sentiment_dict = get_sentiment_list_and_dict()
+    # target_words = all_target_singulars
 
-    all_distances, all_similar_words = get_cosine_distance(normalized_vectors, sentiment_words, sentiment_dict, target_words)
-    print(all_similar_words)
+    # all_distances, all_similar_words = get_cosine_distance(normalized_vectors, sentiment_words, sentiment_dict, target_words)
+    # print(all_similar_words)
 
 
 
