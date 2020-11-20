@@ -148,6 +148,7 @@ def main():
     
     #data needs to be a list of lists of words, where each sublist represents words from one sentence
     data = list(get_data(Path(DATA_PATH), preprocessed=False)) # call preprocess function
+    print("Preprocessing finished, start training!")
 
     word_vectors = train(model, data, EPOCH)
     # normalized_vectors = normalize(word_vectors)
