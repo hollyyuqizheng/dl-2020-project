@@ -8,7 +8,7 @@ from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_sing
 from pdb import set_trace as bp
 
 # --------------- Parameters  -----------------
-DATA_PATH = '../data/nyt-paras.tsv'
+DATA_FOLDER = '../data/'
 COUNT_PARAM_NAME = 'count'
 
 LABEL_PARAM_VERMIN = 'vermin'
@@ -147,8 +147,14 @@ def main():
     model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
     
     #data needs to be a list of lists of words, where each sublist represents words from one sentence
-    data = list(get_data(Path(DATA_PATH), preprocessed=False)) # call preprocess function
-    print("Preprocessing finished, start training!")
+
+    # Call get_data on each individual year file
+    data = []
+    for year in range(1986, 2017):
+        print("getting data from year " + str(year))
+        data += list(get_data(Path(DATA_FOLDER + "nyt-data-"+ str(year) + ".txt"), preprocessed=True)) 
+
+    print("All data collected, start training!")
 
     word_vectors = train(model, data, EPOCH)
     # normalized_vectors = normalize(word_vectors)
