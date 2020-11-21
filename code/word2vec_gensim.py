@@ -154,6 +154,7 @@ def main():
         print("getting data from year " + str(year))
         data += list(get_data(Path(DATA_FOLDER + "nyt-data-"+ str(year) + ".txt"), preprocessed=True)) 
 
+    print("length of data list: " + str(len(data)))
     print("All data collected, start training!")
 
     word_vectors = train(model, data, EPOCH)
