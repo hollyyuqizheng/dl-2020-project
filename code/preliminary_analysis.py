@@ -15,8 +15,12 @@ COUNT_PARAM_NAME = 'count'
 
 def get_weighted_vector(word_vectors, words, morph_forms_dict):
     """
+    Created a weighted average vector for all the input words and their related 
+    morphological forms. 
+    
     Input: 
-     - words: a list of words that we want to find all of its morphological forms 
+     - words: A list of words, such as ['lesbian', 'gay', 'bisexual', 'transgender']
+     - morph_forms_dict: A dictionary of words to their morphologically related words.
     Output: a weighted average word vector for all the morphological forms, based on frequency
     """
     count_dict = {}
@@ -56,6 +60,19 @@ def get_weighted_vector(word_vectors, words, morph_forms_dict):
 
 # Section 3.1.3 -- Negative Evaluation of a Target Group: Word Embedding Neighbor Valence
 def negative_evaluation(wv, target_terms, lexicon, target_forms_dict, n=500):
+    '''
+    Performs Section 3.1.3 of the paper. Identify the n nearest terms to the weighted average of the target terms. 
+    Return a weighted average of the valence of the n nearest neighbors. 
+
+    Parameters:
+        - wv: The normalized and zero-center word vectors, a KeyedVectors object. 
+        - target_terms: A list of target terms, such as ['lesbian', 'gay', 'bisexual', 'transgender']
+        - lexicon: The NRC-VAD lexicon, a Pandas DataFrame.
+        - target_forms_dict: A dictionary of words to their morphologically related words.
+        - n: Number of nearest neighbors. 
+
+    Returns the weighted average valence of the n nearest neighbors, a float. 
+    '''
     # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
     similar_words = wv.similar_by_vector(target_vec, topn=n)
@@ -77,6 +94,19 @@ def negative_evaluation(wv, target_terms, lexicon, target_forms_dict, n=500):
 
 # Section 3.2.3 -- Denial of Agency: Word Embedding Neighbor Dominance
 def denial_of_agency(wv, target_terms, lexicon, target_forms_dict, n=500):
+    '''
+    Performs Section 3.2.3 of the paper. Identify the n nearest terms to the weighted average of the target terms. 
+    Return a weighted average of the valence of the n nearest neighbors. 
+
+    Parameters:
+        - wv: The normalized and zero-center word vectors, a KeyedVectors object. 
+        - target_terms: A list of target terms, such as ['lesbian', 'gay', 'bisexual', 'transgender']
+        - lexicon: The NRC-VAD lexicon, a Pandas DataFrame.
+        - target_forms_dict: A dictionary of words to their morphologically related words.
+        - n: Number of nearest neighbors. 
+        
+    Returns the weighted average valence of the n nearest neighbors, a float. 
+    '''
      # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
     similar_words = wv.similar_by_vector(target_vec, topn=n)
@@ -98,20 +128,40 @@ def denial_of_agency(wv, target_terms, lexicon, target_forms_dict, n=500):
 
 # Section 3.3 -- Moral Disgust
 def moral_disgust(wv, target_terms, target_forms_dict):
+    '''
+    Performs Section 3.3 of the paper. Compute cosine similarity between a target 
+    vector and a moral disgust vector. 
+
+    Parameters:
+        - wv: The normalized and zero-center word vectors, a KeyedVectors object. 
+        - target_terms: A list of target terms, such as ['lesbian', 'gay', 'bisexual', 'transgender']
+        - target_forms_dict: A dictionary of words to their morphologically related words.
+        
+    Returns the cosine similarity between a target vector and a moral disgust vector.
+    '''
     # create moral disgust weighted average vector 
     moral_disgust_vec = get_weighted_vector(wv, all_moral_disgust_stem, all_moral_disgust_dict)
     # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
-
     return wv.cosine_similarities(target_vec, [moral_disgust_vec])
 
 # Section 3.4 -- Vermin as a Dehumanizing Metaphor 
 def vermin(wv, target_term):
+    '''
+    Performs Section 3.3 of the paper. Compute cosine similarity between a target 
+    vector and a vermin vector. 
+
+    Parameters:
+        - wv: The normalized and zero-center word vectors, a KeyedVectors object. 
+        - target_terms: A list of target terms, such as ['lesbian', 'gay', 'bisexual', 'transgender']
+        - target_forms_dict: A dictionary of words to their morphologically related words.
+        
+    Returns the cosine similarity between a target vector and a vermin vector.
+    '''
     # create vermin weighted average vector 
     vermin_vec = get_weighted_vector(wv, all_vermin_singulars, all_vermin_plurals_dict)
     # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
-
     return wv.cosine_similarities(target_vec, [vermin_vec])
 
 def main(argv):
