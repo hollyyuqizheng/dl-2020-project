@@ -1,3 +1,4 @@
+print("Top of file")
 import numpy as np
 from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
@@ -143,6 +144,8 @@ def get_cosine_distance(normalized_word_vectors, sentiment_words, sentiment_dict
 
 
 def main():
+    print("Start of main")
+
     # sg=1 so that it's a skip-gram model
     model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
     
