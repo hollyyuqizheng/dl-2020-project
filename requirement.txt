@@ -1,2 +1,2 @@
-gensim
+gensim==4.0.0b
 nltk

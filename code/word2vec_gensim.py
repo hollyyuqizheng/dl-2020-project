@@ -1,5 +1,6 @@
 print("Top of file")
 import numpy as np
+import os 
 from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
 from preprocess import get_data
@@ -26,14 +27,19 @@ EPOCH = 10
 # ---------------------------------------------
 
 
-def train(model, data, epoch_num):
+def train(model, data, epoch_num, year):
     model.build_vocab(data)
     model.train(data, total_examples=model.corpus_count, epochs=epoch_num)
-    model.save("./nyt_full.model")
+
+    saved_model_folder = "../models/year_" + str(year) + "/" 
+    os.mkdir(saved_model_folder)
+    model.save(saved_model_folder + "nyt_" + str(year) + ".model")
 
     # Get word embeddings from the trained model
-    word_vectors = model.wv
-    return word_vectors
+    #word_vectors = model.wv
+    #return word_vectors
+
+    return 
 
 
 def normalize(word_vectors):
@@ -153,14 +159,19 @@ def main():
 
     # Call get_data on each individual year file
     data = []
+
+    # TODO when training for individual years: 
+    # tell model.save which directory it is saving to
+    # don't use += for data
     for year in range(1986, 2017):
         print("getting data from year " + str(year))
-        data += list(get_data(Path(DATA_FOLDER + "nyt-data-"+ str(year) + ".txt"), preprocessed=True)) 
-        print("length of data list: " + str(len(data)))
-        
-    print("All data collected, start training!")
+        data = list(get_data(Path(DATA_FOLDER + "nyt-data-"+ str(year) + ".txt"), preprocessed=True)) 
 
-    word_vectors = train(model, data, EPOCH)
+        print("length of data list: " + str(len(data)))
+
+        train(model, data, EPOCH, year)
+
+    #print("All data collected, start training!")
     # normalized_vectors = normalize(word_vectors)
 
     # sentiment_words, sentiment_dict = get_sentiment_list_and_dict()
@@ -169,7 +180,7 @@ def main():
     # all_distances, all_similar_words = get_cosine_distance(normalized_vectors, sentiment_words, sentiment_dict, target_words)
     # print(all_similar_words)
 
-
+    return 
 
 if __name__ == '__main__':
     main()

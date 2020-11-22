@@ -3,3 +3,4 @@ data/
 scripts/download_nyt_articles.py
 code/logs/
 logs/
+models/
