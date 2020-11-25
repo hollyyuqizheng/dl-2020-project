@@ -16,7 +16,7 @@ def get_data(filenames: list, preprocessed=False):
 
 
 def process_line(line: str):
-    return re.sub('[^a-z ]', '', line.strip().lower())
+    return re.sub(r"[\n\t\r]*", "", re.sub('[^a-z ]', '', line.strip().lower()))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -27,6 +27,7 @@ if __name__ == '__main__':
 
     for paragraph in get_data(args.filenames, preprocessed=args.p):
         print(paragraph)
+
 
 # get_data('../data/nyt-paras.tsv')
 
