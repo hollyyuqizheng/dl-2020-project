@@ -3,15 +3,19 @@ from gensim.models import Word2Vec
 from gensim.models import KeyedVectors
 from preprocess import get_data
 from pathlib import Path
-from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_singulars, all_target_plurals_dict, all_moral_disgust_stem, all_moral_disgust_dict 
+from words import all_vermin_singulars, all_vermin_plurals_dict, all_target_singulars, all_target_plurals_dict, all_moral_disgust_stem, all_moral_disgust_dict, target_american, target_american_plural, target_homosexual, target_homosexual_plural, target_gay, target_gay_plural
 import pandas as pd
 import sys, getopt
+import csv
 
 from pdb import set_trace as bp
 
 # --------------- Parameters  -----------------
 LEXICON_PATH = '../data/NRC-VAD-Lexicon.txt'
 COUNT_PARAM_NAME = 'count'
+TARGET_LIST = target_american
+TARGET_PLURAL_DICT = target_american_plural
+CSV_NAME = ""
 
 def get_weighted_vector(word_vectors, words, morph_forms_dict):
     """
@@ -75,19 +79,19 @@ def negative_evaluation(wv, target_terms, lexicon, target_forms_dict, n=500):
     '''
     # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
-    similar_words = wv.similar_by_vector(target_vec, topn=n)
+    similar_words = [item[0] for item in wv.similar_by_vector(target_vec, topn=n)]
 
     similar_words_lexicon = lexicon[lexicon['Word'].isin(similar_words)]
 
     count = []
     for word in similar_words_lexicon.Word:
         try:
-            count.append(wv.get_vecattr(row.Word, COUNT_PARAM_NAME))
+            count.append(wv.get_vecattr(word, COUNT_PARAM_NAME))
         except:
             count.append(0) 
 
     similar_words_lexicon["Count"] = count 
-    similar_words_lexicon["Weight"] = similar_words_lexicon["Count"] / similar_words_lexicon["Count"].sum()
+    similar_words_lexicon["Weight"] = similar_words_lexicon["Count"] / similar_words_lexicon["Count"].sum() 
     similar_words_lexicon["Weighted_Valence"] = similar_words_lexicon.apply(lambda row: row.Valence * row.Weight, axis=1)
 
     return similar_words_lexicon["Weighted_Valence"].sum()
@@ -109,14 +113,14 @@ def denial_of_agency(wv, target_terms, lexicon, target_forms_dict, n=500):
     '''
      # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
-    similar_words = wv.similar_by_vector(target_vec, topn=n)
+    similar_words = [item[0] for item in wv.similar_by_vector(target_vec, topn=n)]
 
     similar_words_lexicon = lexicon[lexicon['Word'].isin(similar_words)]
 
     count = []
     for word in similar_words_lexicon.Word:
         try:
-            count.append(wv.get_vecattr(row.Word, COUNT_PARAM_NAME))
+            count.append(wv.get_vecattr(word, COUNT_PARAM_NAME))
         except:
             count.append(0) 
 
@@ -143,10 +147,10 @@ def moral_disgust(wv, target_terms, target_forms_dict):
     moral_disgust_vec = get_weighted_vector(wv, all_moral_disgust_stem, all_moral_disgust_dict)
     # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
-    return wv.cosine_similarities(target_vec, [moral_disgust_vec])
+    return wv.cosine_similarities(target_vec, [moral_disgust_vec])[0]
 
 # Section 3.4 -- Vermin as a Dehumanizing Metaphor 
-def vermin(wv, target_term):
+def vermin(wv, target_terms, target_forms_dict):
     '''
     Performs Section 3.3 of the paper. Compute cosine similarity between a target 
     vector and a vermin vector. 
@@ -162,28 +166,68 @@ def vermin(wv, target_term):
     vermin_vec = get_weighted_vector(wv, all_vermin_singulars, all_vermin_plurals_dict)
     # create target_term vector
     target_vec = get_weighted_vector(wv, target_terms, target_forms_dict)
-    return wv.cosine_similarities(target_vec, [vermin_vec])
+    return wv.cosine_similarities(target_vec, [vermin_vec])[0]
 
 def main(argv):
     year = ""
+    word = ""
+
     try:
-      opts, args = getopt.getopt(argv,"hy:",["year="])
+      opts, args = getopt.getopt(argv,"hy:w",["year=", "word="])
     except getopt.GetoptError:
-        print 'test.py -y <year>'
+        print('test.py -y <year>')
         sys.exit(2)
+
     for opt, arg in opts:
         if opt == '-h':
-            print 'test.py -y <year>'
+            print('test.py -y <year>')
             sys.exit()
         elif opt in ("-y", "--year"):
             year = arg
-
-    wv_path = "../models/nyt-" + year + ".wordvectors"
-    wv = KeyedVectors.load(wv_path) # these should be normalized and centered already
+        elif opt in ("-w", "--word"):
+            word = arg
 
     lexicon = pd.read_csv(LEXICON_PATH, sep='\t')
 
-    # TODO: actually calling the functions for each year
+    if word == "american":
+        TARGET_LIST = target_american
+        TARGET_PLURAL_DICT = target_american_plural
+        CSV_NAME = "american"
+    elif word == "homosexual":
+        TARGET_LIST = target_homosexual
+        TARGET_PLURAL_DICT = target_homosexual_plural
+        CSV_NAME = "homosexual"
+    elif word == "gay":
+        TARGET_LIST = target_gay
+        TARGET_PLURAL_DICT = target_gay_plural
+        CSV_NAME = "gay"
+    else:
+        print("error in reading word")
+
+    if year == "all":
+        csv_out_file = "../analysis/scores_by_year_" + CSV_NAME + ".csv"
+        with open(csv_out_file, "w") as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(['year', 'negative_eval', 'denial_agency', 'moral_disgust', 'vermin'])
+
+            for y in range(1986, 2017):
+                wv_path = "../models/year_" + str(y) + "/nyt_" + str(y) + ".model"
+                wv = Word2Vec.load(wv_path).wv # these should be normalized and centered already
+
+                negative_eval_score = negative_evaluation(wv, TARGET_LIST, lexicon, TARGET_PLURAL_DICT)
+                denial_agency_score = denial_of_agency(wv, TARGET_LIST, lexicon, TARGET_PLURAL_DICT)
+                moral_disgust_score = moral_disgust(wv, TARGET_LIST, TARGET_PLURAL_DICT)
+                vermin_score = vermin(wv, TARGET_LIST, TARGET_PLURAL_DICT)
+
+                # print(negative_eval_score)
+                # print(denial_agency_score)
+                # print(moral_disgust_score)
+                # print(vermin_score)
+
+                row_to_write = [y, negative_eval_score, denial_agency_score, moral_disgust_score, vermin_score]
+                writer.writerow(row_to_write)
+    else:
+        print("tbd..")
 
 if __name__ == "__main__":
     main(sys.argv[1:])

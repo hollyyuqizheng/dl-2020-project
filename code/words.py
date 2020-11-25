@@ -129,3 +129,24 @@ all_target_plurals_dict = {
     "asexual": ["asexuals"],
     "pansexual": ["pansexuals"]
 }
+
+target_american = [
+    "american"
+]
+target_american_plural = {
+    "american" : ["americans"]
+}
+
+target_homosexual = [
+    "homosexual"
+]
+target_homosexual_plural = {
+    "homosexual" : ["homosexuals"]
+}
+
+target_gay = [
+    "gay"
+]
+target_gay_plural = {
+    "gay" : ["gays"]
+}
