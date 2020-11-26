@@ -11,6 +11,7 @@ from pdb import set_trace as bp
 
 # --------------- Parameters  -----------------
 DATA_FOLDER = '../data/'
+FULL_MODEL_FOLDER = '../models/nyt_full.model'
 COUNT_PARAM_NAME = 'count'
 
 LABEL_PARAM_VERMIN = 'vermin'
@@ -153,21 +154,23 @@ def main():
     print("Start of main")
 
     # sg=1 so that it's a skip-gram model
-    model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
+    #model = Word2Vec(window=WINDOW_SIZE, sg=1, min_count=1)
     
     #data needs to be a list of lists of words, where each sublist represents words from one sentence
 
     # Call get_data on each individual year file
-    data = []
+    #data = []
 
     # TODO when training for individual years: 
     # tell model.save which directory it is saving to
     # don't use += for data
     for year in range(1986, 2017):
-        print("getting data from year " + str(year))
+        #print("getting data from year " + str(year))
         data = list(get_data(Path(DATA_FOLDER + "nyt-data-"+ str(year) + ".txt"), preprocessed=True)) 
+        #print("length of data list: " + str(len(data)))
 
-        print("length of data list: " + str(len(data)))
+        # Reload the trained full model
+        model = Word2Vec.load(FULL_MODEL_FOLDER)
 
         train(model, data, EPOCH, year)
 
