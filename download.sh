@@ -2,7 +2,8 @@ mkdir data
 cd data
 
 
-fileid="1rSP8ZOp_gq7lRifsq73KXZXvq_CTtvkT"
+# fileid="1rSP8ZOp_gq7lRifsq73KXZXvq_CTtvkT" - this is an old id
+fileid="1y_S5Je86csU-vfcoNUBob3S-sSKijBen"
 filename="nyt-data.tar.gz"
 cookie_file=".cookie"
 
