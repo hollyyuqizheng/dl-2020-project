@@ -10,13 +10,13 @@ def get_data(filenames: list, preprocessed=False):
             for line in f:
                 if not preprocessed:
                     line = process_line(line)
-                
+                    
                 if line:
                     yield line.split()
 
 
 def process_line(line: str):
-    return re.sub(r"[\n\t\r]*", "", re.sub('[^a-z ]', ' ', line.strip().lower()))
+    return re.sub('[^a-z ]', ' ', line.strip().lower())
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

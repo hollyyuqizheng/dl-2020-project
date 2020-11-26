@@ -16,4 +16,6 @@ then
 	
 	# untar the file
 	tar -v -xzf $filename
+else
+	echo "$filename already downloaded"
 fi
