@@ -1,18 +1,18 @@
 """
 This file contains lists of words whose embeddings we want to look at,
-and dictionaries that map singular nouns to their pural forms. 
+and dictionaries that map singular nouns to their pural forms.
 TODO
 - add words for denial of agency
 """
 
 all_vermin_singulars = [
-    "vermin", 
-    "rodent", 
-    "rat", 
-    "mouse", 
-    "cockroach", 
-    "termite", 
-    "bedbug", 
+    "vermin",
+    "rodent",
+    "rat",
+    "mouse",
+    "cockroach",
+    "termite",
+    "bedbug",
     "fleas"
 ]
 
@@ -21,7 +21,7 @@ all_vermin_plurals_dict = {
     "rat" : ["rats"],
     "termite" : ["termites"],
     "bedbug" : ["bedbugs"],
-    "cockroach" : ["cockroaches"], 
+    "cockroach" : ["cockroaches"],
     "mouse" : ["mice"]
 }
 
@@ -31,7 +31,7 @@ all_vermin_plurals_dict = {
 # ]
 
 # all_moral_disgust_dict = {
-#     "american" : ["americans"], 
+#     "american" : ["americans"],
 #     "japanese" : ["japan"]
 # }
 
@@ -51,7 +51,7 @@ all_moral_disgust_stem = [
     "sick",
     "promiscuous",
     "lewd",
-    "aduterate",
+    "adulterate",
     "tramp",
     "prostitute",
     "unchaste",
@@ -110,16 +110,16 @@ all_target_singulars = [
     "lgbtq",
     "lgbtqia",
     "glbt",
-    "lgbtqqia", 
-    "genderqueer", 
-    "genderfluid", 
-    "intersex", 
+    "lgbtqqia",
+    "genderqueer",
+    "genderfluid",
+    "intersex",
     "pansexual"
 ]
 
 all_target_plurals_dict = {
     "gay" : ["gays"],
-    "lesbian" : ["lesbians"], 
+    "lesbian" : ["lesbians"],
     "bisexual" : ["bisexuals"],
     "homosexual" : ["homosexuals"],
     "transgender" : ["transgenders"],
